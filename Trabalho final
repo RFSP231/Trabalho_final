@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exemplo Simples com Excluir</title>
+  <style>
+    body {
+      background-color: white;
+      color: black;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    button.excluir {
+      margin-left: 10px;
+      color: red;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Tarefas</h1>
+
+  <input id="texto" type="text" placeholder="Digite algo">
+  <button id="salvar">Salvar</button>
+  <button id="tema">Mudar Cor</button>
+
+  <ul id="lista"></ul>
+
+  <script>
+    // ✅ array
+    let itens = [];
+    
+    // ✅ document.querySelector
+    const lista = document.querySelector('#lista');
+
+    // Carregar do localStorage
+    if (localStorage.getItem('itens')) {
+      itens = JSON.parse(localStorage.getItem('itens'));
+      mostrar();
+    }
+
+    // ✅ document.getElementById
+    const input = document.getElementById('texto');
+    const btnSalvar = document.getElementById('salvar');
+    const btnTema = document.getElementById('tema');
+
+    
+    // ✅ addEventListener
+    btnSalvar.addEventListener('click', function() {
+      // ✅ .value
+      let texto = input.value;
+      if (texto.trim() !== '') {
+        itens.push(texto);
+        salvar();
+        mostrar();
+        input.value = '';
+      }
+    });
+
+    btnTema.addEventListener('click', function() {
+      document.body.style.backgroundColor = 
+        document.body.style.backgroundColor === 'white' ? 'lightblue' : 'white';
+    });
+
+    function mostrar() {
+      lista.innerHTML = '';
+      itens.forEach(function(item, index) {
+        let li = document.createElement('li');
+        li.textContent = itens;
+
+        // Botão excluir
+        let btnX = document.createElement('button');
+        btnX.textContent = '🚫';
+        btnX.className = 'excluir';
+        btnX.addEventListener('click', function() {
+          itens.splice(index, 1);
+          salvar();
+          mostrar();
+        });
+
+        li.appendChild(btnX);
+        lista.appendChild(li);
+      });
+    }
+
+    function salvar() {
+      localStorage.setItem('itens', JSON.stringify(itens));
+    }
+  </script>
+</body>
+</html>
